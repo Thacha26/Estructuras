@@ -58,6 +58,7 @@ equivalencia (f1 :<=>: f2) = equivalencia (negacion (f1 :&: negacion f2) :|: (f2
 -----------------------------------------------------
 
 -------------------- EJERCICIO 4 --------------------
+---Evalúa una formula booleana bajop una lista de tuplas que son los valores que se asiganan a las variables (true, false)
 interpretacion :: Formula -> [(Var, Bool)] -> Bool
 interpretacion (Atom a) asignación = valorDeVar a asignación
 interpretacion (Neg f) asignación = not (interpretacion f asignación)
@@ -67,6 +68,7 @@ interpretacion (f1 :=>: f2) asignación = not (interpretacion f1 asignación) ||
 interpretacion (f1 :<=>: f2) asignación = (interpretacion f1 asignación) == (interpretacion f2 asignación)
 
 -- Función auxiliar --
+-- busca el valorboolenao de una variable específica, devuelve error en caso de no encontrarle, devuelve val si a == x y si no sigue buscando
 valorDeVar :: Var -> [(Var, Bool)] -> Bool
 valorDeVar a [] = error "No todas las variables están definidas"
 valorDeVar a ((x, val):xs)
@@ -81,23 +83,28 @@ combinaciones f1 = diferentesCombis (variables f1)
 
 ------Funciones auxiliares para el ejercicio 5-------
 diferentesCombis :: [Var] -> [[(Var, Bool)]]
-diferentesCombis [] = [[]] 
-diferentesCombis (var:vars) = fusionarValores var (diferentesCombis vars)
+diferentesCombis [] = [[]] --Si no hay más combis devuelve la lista vacía
+diferentesCombis (var:vars) = fusionarValores var (diferentesCombis vars) --Crea todas las combinaciones posibles para las variables y luego el valor para la variable actual
 
+--- Tomz todas las combinaciones generadas y luego las fusiana con la variable actual
 fusionarValores :: Var -> [[(Var, Bool)]] -> [[(Var, Bool)]]
 fusionarValores _ [] = []
 fusionarValores var (x:xs) =
   ((var, False):x) : ((var, True):x) : fusionarValores var xs
+
+--convierte las dos listas en tuplas (Var, bool) como lo que hicmos en el lab
+asignarValores :: [Var] -> [Bool] -> [(Var, Bool)]
+asignarValores [] [] = []  
+asignarValores (v:vs) (b:bs) = (v, b) : asignarValores vs bs
 -----------------------------------------------------
 
  --------------------EJERCICIO 6 -------------------------
-tablaDeVerdad :: Formula -> [([(Var, Bool)], Bool)]
+tablaDeVerdad :: Formula -> [([(Var, Bool)], Bool)]a
 tablaDeVerdad f1 = crearTab (combinaciones f1) f1
 
 -- Función auxiliar ---
 crearTab :: [[(Var, Bool)]] -> Formula -> [([(Var, Bool)], Bool)]
-crearTab [] _ = []
-crearTab (x:xs) f1 = 
-  (x, interpretacion f1 x) : crearTab xs f1
+crearTab [] _ = [] --No hay mas combis, no devueñve nada
+crearTab (x:xs) f1 = (x, interpretacion f1 x) : crearTab xs f1 --Evalúa y guarda el resultado
 -----------------------------------------------------
 
