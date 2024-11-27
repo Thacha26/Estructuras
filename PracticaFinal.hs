@@ -99,7 +99,7 @@ asignarValores (v:vs) (b:bs) = (v, b) : asignarValores vs bs
 -----------------------------------------------------
 
  --------------------EJERCICIO 6 -------------------------
-tablaDeVerdad :: Formula -> [([(Var, Bool)], Bool)]a
+tablaDeVerdad :: Formula -> [([(Var, Bool)], Bool)]
 tablaDeVerdad f1 = crearTab (combinaciones f1) f1
 
 -- Función auxiliar ---
@@ -107,4 +107,3 @@ crearTab :: [[(Var, Bool)]] -> Formula -> [([(Var, Bool)], Bool)]
 crearTab [] _ = [] --No hay mas combis, no devueñve nada
 crearTab (x:xs) f1 = (x, interpretacion f1 x) : crearTab xs f1 --Evalúa y guarda el resultado
 -----------------------------------------------------
-
